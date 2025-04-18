@@ -1,0 +1,7 @@
+names:
+- tree
+nc: 1
+path: Datasets/Crown Detection
+test: test_iter_09.txt
+train: train_iter_09.txt
+val: val_iter_09.txt

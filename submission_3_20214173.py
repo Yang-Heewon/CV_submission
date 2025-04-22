@@ -8,7 +8,7 @@ from PIL import Image
 from datetime import datetime
 from models import YOLOv5n
 
-def submission_3_2023110214(yaml_path, output_json_path):
+def submission_3_20214173(yaml_path, output_json_path):
     ###### can be modified (Only Hyperparameters, which can be modified in demo) ######
     data_config = load_yaml_config(yaml_path)
     model_name = 'yolov5n'

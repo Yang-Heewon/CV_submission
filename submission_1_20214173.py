@@ -8,7 +8,7 @@ from PIL import Image
 from datetime import datetime
 from models import YOLOv8n
 
-def submission_1_2023110214(yaml_path, output_json_path):
+def submission_1_20214173(yaml_path, output_json_path):
     ###### can be modified (Only Hyperparameters, which can be modified in demo) ######
     data_config = load_yaml_config(yaml_path)
     model_name = 'yolov8n'
@@ -22,26 +22,31 @@ def submission_1_2023110214(yaml_path, output_json_path):
     
     ###### can be modified (Only Models, which can't be modified in demo) ######
     from ultralytics import YOLO
-    Experiments_Time = datetime.now().strftime("%y%m%d_%H%M%S")
-    ex_dict['Iteration']  = int(yaml_path.split('.yaml')[0][-2:])
-    image_size = 640
-    output_dir ='tmp'
-    optim_args = {'optimizer': optimizer, 'lr': lr, 'momentum': momentum, 'weight_decay': weight_decay}
+    Experiments_Time = datetime.now().strftime("%y%m%d_%H%M%S") #시작 시간
+    ex_dict['Iteration']  = int(yaml_path.split('.yaml')[0][-2:]) # 몇번째 실험인지
+    image_size = 640 #이미지 사이즈즈
+    output_dir ='tmp' #output 장소가 어딘지지
+    optim_args = {'optimizer': optimizer, 'lr': lr, 'momentum': momentum, 'weight_decay': weight_decay} #optimizer에 대한 정보
     devices = [0]
     device = torch.device("cuda:"+str(devices[0])) if len(devices)>0 else torch.device("cpu")
-    ex_dict['Experiment Time'] = Experiments_Time;ex_dict['Epochs'] = epochs;
+    ex_dict['Experiment Time'] = Experiments_Time;
+    ex_dict['Epochs'] = epochs;
     ex_dict['Batch Size'] = batch_size;
-    ex_dict['Device'] = device
+    ex_dict['Device'] = device;
     ex_dict['Optimizer'] = optimizer;
     ex_dict['LR']=optim_args['lr']; ex_dict['Weight Decay']=optim_args['weight_decay'];ex_dict['Momentum']=optim_args['weight_decay'];
-    ex_dict['Image Size'] = image_size
-    ex_dict['Output Dir'] = output_dir 
-    Dataset_Name = yaml_path.split('/')[1]
-    ex_dict['Dataset Name'] = Dataset_Name; ex_dict['Data Config'] = yaml_path; ex_dict['Number of Classes'] = data_config['nc']; ex_dict['Class Names'] = data_config['names']; 
-    control_random_seed(42)
-    model = YOLO(f'{model_name}.yaml', verbose=False)
+    ex_dict['Image Size'] = image_size;
+    ex_dict['Output Dir'] = output_dir ;
+    Dataset_Name = yaml_path.split('/')[1]# dataset 이름
+    ex_dict['Dataset Name'] = Dataset_Name; 
+    ex_dict['Data Config'] = yaml_path; #yaml_path 파일에는 어떤 경로에 어떤 데이터가 있는지, 클래스는 몇 개인지, 클래스 이름은 무엇인지 등 학습에 필요한 데이터셋 구성 정보
+    ex_dict['Number of Classes'] = data_config['nc'];  #나머지는 yaml파일에 있는 정보들
+    ex_dict['Class Names'] = data_config['names']; 
+    control_random_seed(42) #랜덤시드 고정
+    model = YOLO(model_name, verbose=False)  # YOLOv8 모델을 불러옴
     os.makedirs(output_dir, exist_ok=True)
-    ex_dict['Model Name'] = model_name; ex_dict['Model']=model; 
+    ex_dict['Model Name'] = model_name; 
+    ex_dict['Model']=model; 
     ex_dict = YOLOv8n.train_model(ex_dict)
     test_images = get_test_images(data_config)
     results_dict = detect_and_save_bboxes(ex_dict['Model'], test_images)

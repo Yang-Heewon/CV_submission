@@ -13,7 +13,7 @@ def train_model(ex_dict):
     name = f"{ex_dict['Train Time']}_{ex_dict['Model Name']}_{ex_dict['Dataset Name']}_Iter_{ex_dict['Iteration']}"
     task = f"{ex_dict['Experiment Time']}_Train"
 
-    ex_dict['Train Results'] = ex_dict['Model'].train(
+    ex_dict['Tra    in Results'] = ex_dict['Model'].train(
         model = f"{ex_dict['Model Name']}.yaml",
         name=name,
         data=ex_dict['Data Config'] ,
@@ -30,7 +30,7 @@ def train_model(ex_dict):
         weight_decay = ex_dict['Weight Decay'],
         momentum = ex_dict['Momentum'],
         pretrained=False,
-        amp=False,
+        amp=False,                  
         task = task,
         project =f"{ex_dict['Output Dir']}",
     )

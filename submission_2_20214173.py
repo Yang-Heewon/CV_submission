@@ -6,12 +6,12 @@ import random
 import numpy as np
 from PIL import Image
 from datetime import datetime
-from models import YOLOv6n
+from models import YOLOv11n
 
 def submission_2_20214173(yaml_path, output_json_path):
     ###### can be modified (Only Hyperparameters, which can be modified in demo) ######
     data_config = load_yaml_config(yaml_path)
-    model_name = 'yolov6n'
+    model_name = 'yolov11n'
     ex_dict = {}
     epochs = 20
     batch_size = 16
@@ -19,6 +19,7 @@ def submission_2_20214173(yaml_path, output_json_path):
     lr = 1e-3
     momentum = 0.9
     weight_decay = 1e-4
+    
     
     ###### can be modified (Only Models, which can't be modified in demo) ######
     from ultralytics import YOLO
@@ -37,12 +38,16 @@ def submission_2_20214173(yaml_path, output_json_path):
     ex_dict['Image Size'] = image_size
     ex_dict['Output Dir'] = output_dir 
     Dataset_Name = yaml_path.split('/')[1]
-    ex_dict['Dataset Name'] = Dataset_Name; ex_dict['Data Config'] = yaml_path; ex_dict['Number of Classes'] = data_config['nc']; ex_dict['Class Names'] = data_config['names']; 
+    ex_dict['Dataset Name'] = Dataset_Name; 
+    ex_dict['Data Config'] =yaml_path;
+
+    ex_dict['Number of Classes'] = data_config['nc']; ex_dict['Class Names'] = data_config['names']; 
     control_random_seed(42)
-    model = YOLO(f'{model_name}.yaml', verbose=False)
+    model = YOLO("yolov11n.yaml", verbose=False)
+   
     os.makedirs(output_dir, exist_ok=True)
     ex_dict['Model Name'] = model_name; ex_dict['Model']=model; 
-    ex_dict = YOLOv6n.train_model(ex_dict)
+    ex_dict = YOLOv11n.train_model(ex_dict)
     test_images = get_test_images(data_config)
     results_dict = detect_and_save_bboxes(ex_dict['Model'], test_images)
     save_results_to_file(results_dict, output_json_path)

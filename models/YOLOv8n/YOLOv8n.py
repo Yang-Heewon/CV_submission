@@ -11,29 +11,30 @@ settings.update({'datasets_dir': './'})
 def train_model(ex_dict):
     ex_dict['Train Time'] = datetime.now().strftime("%y%m%d_%H%M%S")
     name = f"{ex_dict['Train Time']}_{ex_dict['Model Name']}_{ex_dict['Dataset Name']}_Iter_{ex_dict['Iteration']}"
-    task = f"{ex_dict['Experiment Time']}_Train"
-
-    ex_dict['Tra    in Results'] = ex_dict['Model'].train(
-        model = f"{ex_dict['Model Name']}.yaml",
+    # task = f"{ex_dict['Experiment Time']}_Train"
+# model = f"{ex_dict['Model Name']}.yaml",
+    ex_dict['Train Results'] = ex_dict['Model'].train(
         name=name,
-        data=ex_dict['Data Config'] ,
+        data=ex_dict['Data Config'],
         epochs=ex_dict['Epochs'],
         imgsz=ex_dict['Image Size'],
         batch=ex_dict['Batch Size'],
         patience=20,
         save=True,
-        device=ex_dict['Device'],
         exist_ok=True,
         verbose=False,
         optimizer=ex_dict['Optimizer'],
-        lr0=ex_dict['LR'],  
-        weight_decay = ex_dict['Weight Decay'],
-        momentum = ex_dict['Momentum'],
+        lr0=ex_dict['LR'],
+        weight_decay=ex_dict['Weight Decay'],
+        momentum=ex_dict['Momentum'],
+    
+        device=ex_dict['Device'], 
         pretrained=False,
-        amp=False,                  
-        task = task,
-        project =f"{ex_dict['Output Dir']}",
+        task='detect',
+        amp=False,
+        project=ex_dict['Output Dir']
     )
+
     pt_path = f"{ex_dict['Output Dir']}/{name}/weights/best.pt"
     ex_dict['PT path'] = pt_path
     ex_dict['Model'].load(pt_path)

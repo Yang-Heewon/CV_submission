@@ -23,6 +23,7 @@ def train_model(ex_dict):
         patience=20,
         save=True,
         device=ex_dict['Device'],
+        # device='cpu',
         exist_ok=True,
         verbose=False,
         optimizer=ex_dict['Optimizer'],

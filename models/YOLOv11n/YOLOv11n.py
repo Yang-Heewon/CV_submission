@@ -22,7 +22,8 @@ def train_model(ex_dict):
         batch=ex_dict['Batch Size'],
         patience=20,
         save=True,
-        device=ex_dict['Device'],
+        device=ex_dict['Device'], 
+        # device='cpu',
         exist_ok=True,
         verbose=False,
         optimizer=ex_dict['Optimizer'],
@@ -31,8 +32,8 @@ def train_model(ex_dict):
         momentum=ex_dict['Momentum'],
         pretrained=False,
         amp=False,
-        # task=task,
-        project=ex_dict['Output Dir'],
+        task = "detect",
+        project=ex_dict['Output Dir']
     )
     pt_path = f"{ex_dict['Output Dir']}/{name}/weights/best.pt"
     ex_dict['PT path'] = pt_path

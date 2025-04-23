@@ -1,3 +1,6 @@
+from models.common import CBAM
+import ultralytics.nn.modules as modules
+modules.CBAM = CBAM
 import os
 import cv2
 import yaml
@@ -7,9 +10,21 @@ import numpy as np
 from PIL import Image
 from datetime import datetime
 from models import YOLOv8n
+# CBAM 정의 위치에서 import
+
+
 
 def submission_1_20214173(yaml_path, output_json_path):
     ###### can be modified (Only Hyperparameters, which can be modified in demo) ######
+    from models.common import CBAM
+    import ultralytics.nn.modules as modules
+    modules.CBAM = CBAM
+    import ultralytics.nn.tasks as tasks
+    tasks.CBAM = CBAM
+
+    globals()["CBAM"] = CBAM
+    print("✅ CBAM registered:", hasattr(modules, 'CBAM'))
+
     data_config = load_yaml_config(yaml_path)
     model_name = 'yolov8n'
     ex_dict = {}
@@ -19,6 +34,7 @@ def submission_1_20214173(yaml_path, output_json_path):
     lr = 1e-3
     momentum = 0.9
     weight_decay = 1e-4
+    
     
     ###### can be modified (Only Models, which can't be modified in demo) ######
     from ultralytics import YOLO
@@ -43,7 +59,7 @@ def submission_1_20214173(yaml_path, output_json_path):
     ex_dict['Number of Classes'] = data_config['nc'];  #나머지는 yaml파일에 있는 정보들
     ex_dict['Class Names'] = data_config['names']; 
     control_random_seed(42) #랜덤시드 고정
-    model = YOLO(model_name, verbose=False)  # YOLOv8 모델을 불러옴
+    model = YOLO("yolov8_1n.yaml", verbose=False)  # YOLOv8 모델을 불러옴
     os.makedirs(output_dir, exist_ok=True)
     ex_dict['Model Name'] = model_name; 
     ex_dict['Model']=model; 
